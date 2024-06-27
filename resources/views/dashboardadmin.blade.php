@@ -11,7 +11,7 @@
                     <h3 class="card-title">Admin Dashboard</h3>
                 </div>
                 <div class="card-body">
-                    <!-- Content specific to admin -->
+                    <!-- Content specific to Admin -->
                     <p>Welcome, Admin!</p>
                 </div>
             </div>

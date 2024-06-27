@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'nama' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', 'in:admin,dosen,mahasiswa'],
@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
 
         DB::transaction(function () use ($request) {
             $user = User::create([
-                'name' => $request->name,
+                'nama' => $request->nama,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
@@ -61,13 +61,13 @@ class RegisteredUserController extends Controller
 
             if ($request->role === 'dosen') {
                 Dosen::create([
-                    'name' => $request->name,
+                    'nama' => $request->nama,
                     'email' => $request->email,
                     'fakultas' => $request->fakultas,
                 ]);
             } elseif ($request->role === 'mahasiswa') {
                 Mahasiswa::create([
-                    'name' => $request->name,
+                    'nama' => $request->nama,
                     'nim' => $request->nim,
                     'email' => $request->email,
                     'fakultas' => $request->fakultas,
