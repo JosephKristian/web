@@ -10,8 +10,8 @@ class DosenController extends Controller
 {
     public function index()
     {
-        $dosens = Dosen::all();
-        return view('admin.dosen.index', compact('dosens'));
+        $dosen = Dosen::all();
+        return view('admin.dosen.index', compact('dosen'));
     }
 
     public function create()
@@ -23,7 +23,7 @@ class DosenController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:dosens,email',
+            'email' => 'required|email|unique:dosen,email',
             'fakultas' => 'required|string|max:255',
         ]);
 
@@ -42,7 +42,7 @@ class DosenController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:dosens,email,' . $id,
+            'email' => 'required|email|unique:dosen,email,' . $id,
             'fakultas' => 'required|string|max:255',
         ]);
 
