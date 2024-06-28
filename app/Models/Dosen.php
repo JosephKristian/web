@@ -11,7 +11,7 @@ class Dosen extends Model {
     
     protected $table = 'dosen';
     protected $fillable = [
-        'name', 'email', 'fakultas'
+        'nama', 'email', 'fakultas'
     ];
 
     public function user() {
