@@ -127,7 +127,5 @@
     <script src="{{ asset('dist/assets/js/sidebar-mini.js') }}"></script>
     <script src="{{ asset('dist/assets/js/app.js') }}"></script>
 
-    <!-- App Settings (safe to remove) -->
-    <script src="{{ asset('dist/assets/js/app-settings.js') }}"></script>
 </body>
 </html>

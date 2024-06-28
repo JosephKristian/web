@@ -9,7 +9,7 @@
         <span class="material-icons">arrow_back</span>
     </a>
     
-    <a href="{{ route('mahasiswa.create') }}" class="btn btn-primary">Tambah Mahasiswa</a>
+    <a href="{{ route('admin.mahasiswa.create') }}" class="btn btn-primary">Tambah Mahasiswa</a>
     <table class="table mt-3">
         <thead>
             <tr>
@@ -30,8 +30,8 @@
                 <td>{{ $mahasiswa->fakultas }}</td>
                 <td>{{ $mahasiswa->jurusan }}</td>
                 <td>
-                    <a href="{{ route('mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('mahasiswa.destroy', $mahasiswa->id) }}" method="POST" style="display:inline-block;">
+                    <a href="{{ route('admin.mahasiswa.edit', $mahasiswa->id) }}" class="btn btn-warning">Edit</a>
+                    <form action="{{ route('admin.mahasiswa.destroy', $mahasiswa->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">Hapus</button>

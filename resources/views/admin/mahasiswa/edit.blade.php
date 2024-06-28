@@ -5,11 +5,11 @@
     <div class="card card-form">
         <div class="row no-gutters">
             <div class="col-lg-4 card-body">
-                <p><strong class="headings-color">Form Update Mahasiswa</strong></p>
-                <p class="text-muted">Silakan update informasi mahasiswa sesuai dengan data yang diperlukan.</p>
+                <p><strong class="headings-color">Form Update</strong></p>
+                <p class="text-muted"></p>
             </div>
             <div class="col-lg-8 card-form__body card-body">
-                <form action="{{ route('mahasiswa.update', $mahasiswa->id) }}" method="POST" class="was-validated">
+                <form action="{{ route('admin.mahasiswa.update', $mahasiswa->id) }}" method="POST" class="was-validated">
                     @csrf
                     @method('PUT')
                     <div class="form-row">
@@ -32,6 +32,15 @@
                     </div>
                     <div class="form-row">
                         <div class="col-12 mb-3">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Email" value="{{ $mahasiswa->email }}" required>
+                            @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 mb-3">
                             <label for="fakultas">Fakultas</label>
                             <input type="text" class="form-control @error('fakultas') is-invalid @enderror" id="fakultas" name="fakultas" placeholder="Fakultas" value="{{ $mahasiswa->fakultas }}" required>
                             @error('fakultas')
@@ -48,7 +57,7 @@
                             @enderror
                         </div>
                     </div>
-                    <button class="btn btn-primary" type="submit">Simpan Perubahan</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
                     <a href="{{ route('admin.mahasiswa.index') }}" class="btn btn-secondary">Kembali</a>
                 </form>
             </div>

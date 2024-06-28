@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
@@ -21,6 +21,9 @@ class MahasiswaController extends Controller
 
     public function store(Request $request)
     {
+        // Log request data
+        Log::info('Update request data: ', $request->all());
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'nim' => 'required|string|max:20|unique:mahasiswa,nim',
@@ -29,15 +32,9 @@ class MahasiswaController extends Controller
             'jurusan' => 'required|string|max:255',
         ]);
 
-        Mahasiswa::create([
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'email' => $request->email,
-            'fakultas' => $request->fakultas,
-            'jurusan' => $request->jurusan,
-        ]);
+        Mahasiswa::create($request->all());
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
+        return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -57,14 +54,15 @@ class MahasiswaController extends Controller
         ]);
 
         $mahasiswa = Mahasiswa::findOrFail($id);
-        $mahasiswa->nama = $request->nama;
-        $mahasiswa->nim = $request->nim;
-        $mahasiswa->email = $request->email;
-        $mahasiswa->fakultas = $request->fakultas;
-        $mahasiswa->jurusan = $request->jurusan;
-        $mahasiswa->save();
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diupdate');
+        Log::info('Mahasiswa sebelum update: ', $mahasiswa->toArray());
+
+        $mahasiswa->update($request->all());
+
+        // Log request data
+        Log::info('Update request data: ', $request->all());
+
+        return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diupdate');
     }
 
     public function destroy($id)
@@ -72,6 +70,6 @@ class MahasiswaController extends Controller
         $mahasiswa = Mahasiswa::findOrFail($id);
         $mahasiswa->delete();
 
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
+        return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }
 }

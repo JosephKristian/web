@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Dosen;
 use Illuminate\Http\Request;
+use App\Models\Dosen;
 
 class DosenController extends Controller
 {
@@ -22,8 +22,8 @@ class DosenController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:dosens',
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:dosens,email',
             'fakultas' => 'required|string|max:255',
         ]);
 
@@ -32,26 +32,29 @@ class DosenController extends Controller
         return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil ditambahkan');
     }
 
-    public function edit(Dosen $dosen)
+    public function edit($id)
     {
+        $dosen = Dosen::findOrFail($id);
         return view('admin.dosen.edit', compact('dosen'));
     }
 
-    public function update(Request $request, Dosen $dosen)
+    public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:dosens,email,' . $dosen->id,
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:dosens,email,' . $id,
             'fakultas' => 'required|string|max:255',
         ]);
 
+        $dosen = Dosen::findOrFail($id);
         $dosen->update($request->all());
 
-        return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil diperbarui');
+        return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil diupdate');
     }
 
-    public function destroy(Dosen $dosen)
+    public function destroy($id)
     {
+        $dosen = Dosen::findOrFail($id);
         $dosen->delete();
 
         return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil dihapus');
