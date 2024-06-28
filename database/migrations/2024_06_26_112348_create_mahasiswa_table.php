@@ -7,7 +7,7 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('nama');
             $table->string('nim')->unique();
             $table->string('email')->unique();
             $table->string('fakultas');
