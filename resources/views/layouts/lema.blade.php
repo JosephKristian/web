@@ -34,6 +34,10 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
 </head>
 
 <body class="layout-default">
@@ -88,7 +92,7 @@
             @endphp
 
             <!-- Sidebar -->
-            @if($userRole == 'admin')
+            @if ($userRole == 'admin')
                 @include('layouts.partials.sidebar-admin')
             @elseif($userRole == 'mahasiswa')
                 @include('layouts.partials.sidebar-mahasiswa')
@@ -127,5 +131,9 @@
     <script src="{{ asset('dist/assets/js/sidebar-mini.js') }}"></script>
     <script src="{{ asset('dist/assets/js/app.js') }}"></script>
 
+    <!-- Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 </body>
+
 </html>

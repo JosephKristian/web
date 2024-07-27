@@ -4,16 +4,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Dosen extends Model {
+class Jadwal extends Model
+{
     use HasFactory;
+    protected $table = 'jadwal';
 
-    protected $table = 'dosen';
     protected $fillable = [
-        'nama', 'email', 'fakultas', 'user_id'
+        'tanggal', 'dosen_id', 'mahasiswa_id'
     ];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function dosen()
+    {
+        return $this->belongsTo(Dosen::class);
+    }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class);
     }
 
     public function jadwals() {

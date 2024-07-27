@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DosenController;
+use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -52,6 +53,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
 //     Route::post('/dosen/{id}', [DosenController::class, 'update'])->name('admin.dosen.update');
 //     Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('admin.dosen.destroy');
 // });
+
+
+// Jadwal Sidang Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+    Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
+    Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
+    Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
+    Route::put('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
+    Route::delete('/jadwal/{id}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
+});
+
+
 
 // Mahasiswa
 Route::prefix('admin')->group(function () {
