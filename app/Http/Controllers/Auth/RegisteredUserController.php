@@ -64,6 +64,7 @@ class RegisteredUserController extends Controller
                     'nama' => $request->nama,
                     'email' => $request->email,
                     'fakultas' => $request->fakultas,
+                    'user_id' => $user->id, // Menambahkan user_id
                 ]);
             } elseif ($request->role === 'mahasiswa') {
                 Mahasiswa::create([
@@ -72,6 +73,7 @@ class RegisteredUserController extends Controller
                     'email' => $request->email,
                     'fakultas' => $request->fakultas,
                     'jurusan' => $request->jurusan,
+                    'user_id' => $user->id, // Menambahkan user_id
                 ]);
             }
 

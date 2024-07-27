@@ -16,5 +16,11 @@ class Mahasiswa extends Model
         'email',
         'fakultas',
         'jurusan',
+        'user_id', // tambahkan user_id ke fillable
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

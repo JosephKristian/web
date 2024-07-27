@@ -12,6 +12,8 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('fakultas');
             $table->string('jurusan');
+            $table->unsignedBigInteger('user_id'); // Tambahkan kolom user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Tambahkan foreign key constraint
             $table->timestamps();
         });
     }
@@ -20,4 +22,3 @@ return new class extends Migration {
         Schema::dropIfExists('mahasiswa');
     }
 };
-

@@ -1,10 +1,12 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DosenController extends Controller
 {
@@ -23,14 +25,32 @@ class DosenController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:dosen,email',
+            'email' => 'required|email|unique:dosen,email|unique:users,email',
             'fakultas' => 'required|string|max:255',
+            'password' => 'required|string|min:8|confirmed',
         ]);
-
-        Dosen::create($request->all());
-
+    
+        DB::transaction(function () use ($request) {
+            // Create user
+            $user = User::create([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'dosen',
+            ]);
+    
+            // Create dosen
+            Dosen::create([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'fakultas' => $request->fakultas,
+                'user_id' => $user->id,
+            ]);
+        });
+    
         return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil ditambahkan');
     }
+    
 
     public function edit($id)
     {
@@ -40,14 +60,29 @@ class DosenController extends Controller
 
     public function update(Request $request, $id)
     {
+        $dosen = Dosen::findOrFail($id);
         $request->validate([
             'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:dosen,email,' . $id,
+            'email' => 'required|email|unique:dosen,email,' . $id . '|unique:users,email,' . $dosen->user_id,
             'fakultas' => 'required|string|max:255',
         ]);
 
-        $dosen = Dosen::findOrFail($id);
-        $dosen->update($request->all());
+        $user = User::findOrFail($dosen->user_id);
+
+        DB::transaction(function () use ($request, $dosen, $user) {
+            // Update user
+            $user->update([
+                'name' => $request->nama,
+                'email' => $request->email,
+            ]);
+
+            // Update dosen
+            $dosen->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'fakultas' => $request->fakultas,
+            ]);
+        });
 
         return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil diupdate');
     }
@@ -55,7 +90,12 @@ class DosenController extends Controller
     public function destroy($id)
     {
         $dosen = Dosen::findOrFail($id);
-        $dosen->delete();
+        $user = User::findOrFail($dosen->user_id);
+
+        DB::transaction(function () use ($dosen, $user) {
+            $dosen->delete();
+            $user->delete();
+        });
 
         return redirect()->route('admin.dosen.index')->with('success', 'Data dosen berhasil dihapus');
     }

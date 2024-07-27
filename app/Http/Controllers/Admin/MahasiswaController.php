@@ -1,10 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use Illuminate\Support\Facades\Log;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MahasiswaController extends Controller
 {
@@ -27,12 +31,31 @@ class MahasiswaController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'nim' => 'required|string|max:20|unique:mahasiswa,nim',
-            'email' => 'required|email|unique:mahasiswa,email',
+            'email' => 'required|email|unique:mahasiswa,email|unique:users,email',
+            'password' => 'required|string|min:8',
             'fakultas' => 'required|string|max:255',
             'jurusan' => 'required|string|max:255',
         ]);
 
-        Mahasiswa::create($request->all());
+        DB::transaction(function () use ($request) {
+            // Create user
+            $user = User::create([
+                'nama' => $request->nama,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'mahasiswa',
+            ]);
+
+            // Create mahasiswa
+            Mahasiswa::create([
+                'nama' => $request->nama,
+                'nim' => $request->nim,
+                'email' => $request->email,
+                'fakultas' => $request->fakultas,
+                'jurusan' => $request->jurusan,
+                'user_id' => $user->id,
+            ]);
+        });
 
         return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
     }
@@ -45,30 +68,41 @@ class MahasiswaController extends Controller
 
     public function update(Request $request, $id)
     {
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $user = User::findOrFail($mahasiswa->user_id);
+
         $request->validate([
             'nama' => 'required|string|max:255',
             'nim' => 'required|string|max:20|unique:mahasiswa,nim,' . $id,
-            'email' => 'required|email|unique:mahasiswa,email,' . $id,
+            'email' => 'required|email|unique:mahasiswa,email,' . $id . '|unique:users,email,' . $user->id,
             'fakultas' => 'required|string|max:255',
             'jurusan' => 'required|string|max:255',
         ]);
 
-        $mahasiswa = Mahasiswa::findOrFail($id);
+        DB::transaction(function () use ($request, $mahasiswa, $user) {
+            // Update user
+            $user->update([
+                'nama' => $request->nama,
+                'email' => $request->email,
+            ]);
 
-        Log::info('Mahasiswa sebelum update: ', $mahasiswa->toArray());
-
-        $mahasiswa->update($request->all());
-
-        // Log request data
-        Log::info('Update request data: ', $request->all());
+            // Update mahasiswa
+            $mahasiswa->update($request->all());
+        });
 
         return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil diupdate');
     }
 
+
     public function destroy($id)
     {
         $mahasiswa = Mahasiswa::findOrFail($id);
-        $mahasiswa->delete();
+        $user = User::findOrFail($mahasiswa->user_id);
+
+        DB::transaction(function () use ($mahasiswa, $user) {
+            $mahasiswa->delete();
+            $user->delete();
+        });
 
         return redirect()->route('admin.mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }

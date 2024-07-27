@@ -40,6 +40,15 @@
                     </div>
                     <div class="form-row">
                         <div class="col-12 mb-3">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="Password" required>
+                            @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col-12 mb-3">
                             <label for="fakultas">Fakultas</label>
                             <input type="text" class="form-control @error('fakultas') is-invalid @enderror" id="fakultas" name="fakultas" placeholder="Fakultas" value="{{ old('fakultas') }}" required>
                             @error('fakultas')

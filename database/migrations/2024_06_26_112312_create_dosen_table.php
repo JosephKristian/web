@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('fakultas');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Menambahkan relasi ke tabel users
             $table->timestamps();
         });
     }
@@ -19,4 +20,3 @@ return new class extends Migration {
         Schema::dropIfExists('dosen');
     }
 };
-
